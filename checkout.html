@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>UniPaas Checkout Page</title>
+  <!-- 1) Load UniPaas embedded components -->
+  <script src="https://cdn.unipaas.com/embedded-components.js"></script>
+  <style>
+    /* Basic styling for a clean look - customize as needed */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background-color: #f4f6f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .checkout-container {
+      background: #ffffff;
+      border: 1px solid #eceff3;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 500px;
+    }
+
+    h1 {
+      margin-bottom: 24px;
+      color: #333;
+    }
+
+    .pay-button {
+      padding: 14px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #2F80ED;
+      color: #ffffff;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .pay-button:hover {
+      background-color: #1866ce;
+    }
+
+    /* Hidden by default; shown once user clicks 'Pay Now' */
+    #checkout {
+      margin-top: 24px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <h1>Your Purchase</h1>
+    <!-- 2) The button that triggers the checkout embed -->
+    <button class="pay-button" id="pay-now-btn">Pay Now</button>
+
+    <!-- 3) Container for the checkout embed, initially hidden -->
+    <div id="checkout"></div>
+  </div>
+
+  <!-- 4) Initialize UniPaas components with your session token and optional theme config -->
+  <script type="text/javascript">
+    // Replace <YOUR_ACCESS_TOKEN> with the provided token
+    const ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjaGFudElkIjoiNjcyNzIxMjQxM2Q5ZTM1M2ViYTUwMjhmIiwibWVyY2hhbnROYW1lIjoiSm9obiBDZW5hIiwiYW1vdW50Ijo0MCwib3JpZ2luYWxBbW91bnQiOjQwLCJjdXJyZW5jeSI6IkdCUCIsImVtYWlsIjoiaGVuLmhhZGF5b0B1bmlwYWFzLmNvbSIsImNvdW50cnkiOiJHQiIsInNlbGxlcklkIjoiNjc4OTEwYTIyMGJlZWIyNjc2NGJhN2Y5IiwidmVuZG9ySWQiOiI2Nzg5MTBhMjIwYmVlYjI2NzY0YmE3ZjkiLCJzY29wZXMiOlsid2Vic2RrX2FjY2VzcyIsImRpcmVjdF9kZWJpdF9yZWFkIiwiZGlyZWN0X2RlYml0X3dyaXRlIl0sInBheW1lbnRNZXRob2RzIjpbInRheEZyZWVDaGlsZGNhcmUiLCJjcmVkaXRDYXJkIl0sImlzUmVjdXJyaW5nIjpmYWxzZSwiY29uc3VtZXJJZCI6IjY4NjNmOGJhMzkyOWEzZGU3MDFmY2YzYiIsImNvbnN1bWVyIjp7InJlZmVyZW5jZSI6IjI1ODk2NTg5In0sImVudiI6ImRldiIsInBheW1lbnRMaW5rSWQiOiI0dklodE9XMVNhIiwiaWF0IjoxNzUxMzgyMjAyLCJleHAiOjE3NTEzODQwMDJ9.5fMti2aQbQ5c61JcFrs9dGGlsJDW5tCZfcwGLGaCUw4"
+   
+   
+   
+   
+    // Optional: Define a custom theme or use "default"/"dark" directly
+    // For example, we'll override some of the default colors:
+    const config_general = {
+      theme: {
+        type: "default"
+      },
+    };
+
+    // Create the UniPaas buyerComponents object
+    const components = unipaas.buyerComponents(ACCESS_TOKEN, config_general);
+
+    // Listen to events as desired
+    // These events can be used to handle success, errors, cancellations, etc.
+    components.on("paymentSuccess", (e) => {
+      console.log("Payment succeeded:", e.detail);
+      alert("Payment succeeded!");
+    });
+    components.on("paymentError", (e) => {
+      console.log("Payment error:", e.detail);
+      alert("Payment error occurred!");
+    });
+    components.on("paymentCancel", (e) => {
+      console.log("Payment canceled:", e.detail);
+      alert("Payment was canceled by the user.");
+    });
+
+    // Grab the button and attach an event to mount the checkout
+    const payNowBtn = document.getElementById("pay-now-btn");
+    payNowBtn.addEventListener("click", () => {
+      // Show the checkout container
+      const checkoutContainer = document.getElementById("checkout");
+      checkoutContainer.style.display = "block";
+
+      // Create and mount the checkout component
+      const checkout = components.create("checkout");
+      checkout.mount("#checkout");
+    });
+  </script>
+</body>
+</html>
